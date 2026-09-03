@@ -1,0 +1,50 @@
+{
+  "name": "tesi-web",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "validate:home": "node scripts/validate-home.mjs",
+    "validate:site": "node scripts/validate-site.mjs",
+    "validate:change-001": "node scripts/validate-change-001.mjs",
+    "validate:change-002": "node scripts/validate-change-001.mjs",
+    "validate:change-003": "node scripts/validate-change-003.mjs",
+    "validate:change-004": "node scripts/validate-change-004.mjs",
+    "validate:change-005": "node scripts/validate-change-005.mjs",
+    "test:lambda": "node --test infra/lambda/employment/core.test.mjs",
+    "verify:employment-live": "node scripts/verify-employment-live.mjs",
+    "preview": "vite preview --port 3000 --strictPort"
+  },
+  "dependencies": {
+    "@fontsource-variable/manrope": "^5.3.0",
+    "@hookform/resolvers": "^5.9.1",
+    "@react-three/drei": "^10.7.8",
+    "@react-three/fiber": "^9.7.0",
+    "gsap": "^3.15.0",
+    "lucide-react": "^1.39.0",
+    "motion": "^13.2.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-hook-form": "^7.87.0",
+    "react-router-dom": "^7.18.3",
+    "three": "^0.185.1",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "@vitejs/plugin-react": "^6.1.1",
+    "eslint": "^10.9.1",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.6",
+    "globals": "^17.12.0",
+    "playwright-core": "^1.62.1",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.69.0",
+    "vite": "^8.2.2"
+  }
+}

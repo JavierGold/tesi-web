@@ -1,0 +1,333 @@
+.reasons-section {
+  background: var(--color-white);
+}
+
+.reasons-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.reason-card {
+  position: relative;
+  grid-column: span 2;
+  min-width: 0;
+  min-height: 22rem;
+  padding: clamp(1.5rem, 3vw, 2.4rem);
+  overflow: hidden;
+  border: 1px solid rgb(8 43 76 / 11%);
+  border-radius: var(--radius-medium);
+  background: var(--color-white);
+  transition:
+    border-color 210ms ease,
+    box-shadow 210ms ease,
+    transform 210ms ease;
+}
+
+.reason-card:nth-child(4) {
+  grid-column: 2 / span 2;
+}
+
+.reason-card:hover {
+  border-color: rgb(37 99 235 / 30%);
+  box-shadow: 0 20px 48px rgb(8 43 76 / 9%);
+  transform: translateY(-4px);
+}
+
+.reason-card::after {
+  position: absolute;
+  right: -5rem;
+  bottom: -6rem;
+  width: 12rem;
+  height: 12rem;
+  border: 1px solid rgb(37 99 235 / 10%);
+  border-radius: 50%;
+  content: '';
+}
+
+.reason-card-top {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: clamp(3rem, 6vw, 6rem);
+  color: var(--color-blue);
+}
+
+.reason-card-top span {
+  color: rgb(8 43 76 / 34%);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.reason-card h3 {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-size: clamp(1.35rem, 2vw, 1.85rem);
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+}
+
+.reason-card p {
+  position: relative;
+  z-index: 1;
+  margin: 1rem 0 0;
+  color: var(--color-text-secondary);
+  line-height: 1.72;
+}
+
+.profiles-section {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-navy);
+}
+
+.profiles-section::before {
+  position: absolute;
+  top: -16rem;
+  right: -14rem;
+  width: 36rem;
+  height: 36rem;
+  border: 1px solid rgb(34 199 242 / 14%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 6rem rgb(139 92 246 / 4%);
+  content: '';
+}
+
+.profiles-section .container {
+  position: relative;
+  z-index: 1;
+}
+
+.profile-areas {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgb(255 255 255 / 16%);
+  background: rgb(255 255 255 / 16%);
+  list-style: none;
+}
+
+.profile-areas li {
+  display: flex;
+  grid-column: span 3;
+  min-height: 8rem;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: clamp(1.2rem, 2.5vw, 2rem);
+  color: var(--color-white);
+  background: var(--color-navy);
+  font-weight: 600;
+}
+
+.profile-areas li:nth-last-child(-n + 3) {
+  grid-column: span 4;
+}
+
+.profile-areas svg {
+  flex: 0 0 auto;
+  color: var(--color-cyan);
+}
+
+.form-field .cv-uploader-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.cv-uploader {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 7.5rem;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.15rem;
+  border: 1px dashed rgb(37 99 235 / 35%);
+  border-radius: 0.8rem;
+  color: var(--color-navy-secondary);
+  background: rgb(37 99 235 / 4%);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.cv-uploader:hover {
+  border-color: rgb(37 99 235 / 62%);
+  background: rgb(37 99 235 / 7%);
+}
+
+.cv-uploader:focus-visible {
+  border-color: var(--color-blue);
+  box-shadow: 0 0 0 4px rgb(37 99 235 / 12%);
+  outline: none;
+}
+
+.cv-uploader.is-dragging {
+  border-color: var(--color-cyan);
+  background: rgb(34 199 242 / 10%);
+  box-shadow: inset 0 0 0 1px rgb(34 199 242 / 25%);
+  transform: translateY(-2px);
+}
+
+.cv-uploader.is-ready {
+  border-color: rgb(20 136 91 / 38%);
+  background: #f5fcf8;
+}
+
+.cv-uploader[aria-invalid='true'] {
+  border-color: #c4314b;
+  background: #fffafb;
+}
+
+.cv-uploader-icon {
+  display: grid;
+  width: 3.25rem;
+  height: 3.25rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgb(37 99 235 / 14%);
+  border-radius: 0.9rem;
+  color: var(--color-blue);
+  background: var(--color-white);
+  box-shadow: 0 8px 20px rgb(8 43 76 / 7%);
+}
+
+.cv-uploader.is-ready .cv-uploader-icon {
+  border-color: rgb(20 136 91 / 20%);
+  color: #0f6845;
+}
+
+.cv-uploader-copy {
+  display: grid;
+  min-width: 0;
+  gap: 0.28rem;
+}
+
+.cv-uploader-copy strong {
+  color: var(--color-navy);
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.cv-uploader-copy > span {
+  color: var(--color-text-secondary);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.cv-uploader-filename {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.cv-uploader-copy .cv-uploader-change {
+  margin-top: 0.15rem;
+  color: var(--color-blue);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.cv-uploader-remove {
+  display: inline-flex;
+  min-height: 2.25rem;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.55rem;
+  padding: 0.35rem 0;
+  border: 0;
+  color: var(--color-text-secondary);
+  background: transparent;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.cv-uploader-remove:hover {
+  color: #a92139;
+}
+
+.cv-uploader-remove:focus-visible {
+  border-radius: 0.25rem;
+  outline: 2px solid var(--color-blue);
+  outline-offset: 3px;
+}
+
+@media (max-width: 1024px) {
+  .reasons-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .reason-card,
+  .reason-card:nth-child(4) {
+    grid-column: auto;
+  }
+
+  .reason-card:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .profile-areas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .profile-areas li,
+  .profile-areas li:nth-last-child(-n + 3) {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 760px) {
+  .reasons-grid,
+  .profile-areas {
+    grid-template-columns: 1fr;
+  }
+
+  .reason-card:last-child {
+    grid-column: auto;
+  }
+
+  .reason-card {
+    min-height: auto;
+  }
+
+  .reason-card-top {
+    margin-bottom: 3rem;
+  }
+
+  .cv-uploader {
+    min-height: 9rem;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reason-card,
+  .cv-uploader {
+    transition: none;
+  }
+}

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 25.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="620px" height="135px" viewBox="0 0 620 135" style="enable-background:new 0 0 620 135;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#EF9449;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;}
+	.st1{fill:none;stroke:#B93A7A;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;}
+	.st2{fill:none;stroke:#CA3D7B;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;}
+	.st3{fill:none;stroke:#D34056;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;}
+	.st4{fill:none;stroke:#44448B;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;}
+	.st5{fill:none;stroke:#1F7FC0;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;}
+	.st6{fill:none;stroke:#1B97D0;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;}
+</style>
+<g id="o">
+	<g id="o-top">
+		<path class="st0" d="M613.3,86.4C611,64.6,591.6,48.8,569.8,51c-18.7,1.9-33.4,16.7-35.4,35.4"/>
+	</g>
+	<g id="o-bottom">
+		<path class="st0" d="M534.4,94.5c2.3,21.8,21.7,37.6,43.5,35.4c18.7-1.9,33.4-16.7,35.4-35.4"/>
+	</g>
+</g>
+<g id="i-2">
+	<line class="st1" x1="393.5" y1="130.5" x2="393.5" y2="50.5"/>
+</g>
+<g id="t">
+	<g id="t-top">
+		<line class="st2" x1="412.5" y1="53.5" x2="485.5" y2="53.5"/>
+	</g>
+	<g id="t-bottom">
+		<line class="st2" x1="449.5" y1="130.5" x2="449.5" y2="61.5"/>
+	</g>
+</g>
+<g id="i-3">
+	<line class="st3" x1="505.5" y1="130.5" x2="505.5" y2="50.5"/>
+</g>
+<g id="n">
+	<path class="st4" d="M368.5,129.5v-2.8c0-22.3-18-40.7-40.3-40.3c-21.4,0.4-38.7,17.9-38.7,39.5v3.6"/>
+</g>
+<g id="i-1">
+	<line class="st5" x1="265.5" y1="130.5" x2="265.5" y2="50.5"/>
+</g>
+<g id="b">
+	<g id="b-top">
+		<path class="st6" d="M108.5,86.4V4.5"/>
+		<path class="st6" d="M187.4,86.4c-2.3-21.8-21.7-37.6-43.5-35.4c-18.7,1.9-33.4,16.7-35.4,35.4"/>
+	</g>
+	<g id="b-bottom">
+		<path class="st6" d="M108.9,94.5c2.3,21.8,21.7,37.6,43.5,35.4c18.7-1.9,33.4-16.7,35.4-35.4"/>
+	</g>
+</g>
+<g id="a">
+	<g id="a-left">
+		<line class="st6" x1="6.7" y1="130.1" x2="44.4" y2="53.2"/>
+	</g>
+	<g id="a-right">
+		<line class="st6" x1="52.6" y1="53.2" x2="90.3" y2="130.1"/>
+	</g>
+</g>
+</svg>
