@@ -1,6 +1,6 @@
 export const navigation = [
   { label: 'Home', to: '/' },
-  { label: 'Sobre nosotros', to: '/nosotros' },
+  { label: 'Sobre nosotros', to: '/sobre-nosotros' },
   { label: 'Empleo', to: '/empleo' },
   { label: 'Contacto', to: '/contacto' },
 ] as const

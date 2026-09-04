@@ -13,17 +13,19 @@ La aplicación React + Vite + TypeScript cuenta con las cuatro páginas completa
 El proyecto cuenta con cuatro rutas base:
 
 - `/` — Home.
-- `/nosotros` — Sobre nosotros.
+- `/sobre-nosotros` — Sobre nosotros.
 - `/empleo` — Empleo.
 - `/contacto` — Contacto.
 
-Home fue aprobado por el usuario y se conservó sin rediseños. Sobre nosotros, Empleo y Contacto implementan ahora todas las secciones y textos correspondientes de `CONTENT.md` con el mismo lenguaje visual. La ruta `/nosotros` incorpora CAMBIO-001 y las correcciones puntuales de CAMBIO-002 definidas en `CHANGES.md` para los modelos visuales de gestión PMI y desarrollo continuo de talento/capacity.
+Home fue aprobado por el usuario y se conservó sin rediseños. Sobre nosotros, Empleo y Contacto implementan ahora todas las secciones y textos correspondientes de `CONTENT.md` con el mismo lenguaje visual. La ruta `/sobre-nosotros` incorpora CAMBIO-001 y las correcciones puntuales de CAMBIO-002 definidas en `CHANGES.md` para los modelos visuales de gestión PMI y desarrollo continuo de talento/capacity; `/nosotros` se conserva como alias compatible.
 
 Contacto continúa integrado con Web3Forms exactamente como quedó en CAMBIO-004. Empleo fue migrado en CAMBIO-005 a un flujo AWS con API Gateway, Lambda, S3 privado y SES; conserva React Hook Form, Zod, el uploader de CAMBIO-003 y la confirmación visual compartida. La infraestructura AWS y el frontend están desplegados, SES está verificado y el flujo completo fue validado con dos envíos reales de CV.
 
 No existen todavía escenas 3D complejas o basadas en WebGL ni despliegue en Vercel. CAMBIO-001 utiliza únicamente profundidad 3D ligera mediante CSS en sus gráficos. El backend serverless de Empleo fue aplicado correctamente en AWS.
 
-El servidor de desarrollo está activo y responde correctamente en `localhost:3000` al momento de esta actualización.
+CAMBIO-006 está implementado y desplegado. CloudFront resuelve las rutas SPA mediante respuestas personalizadas para 403/404, el header permanece visible y se compacta durante el scroll, y la animación de “Proyecto exitoso” completa su entrada en aproximadamente 1.2 segundos.
+
+El servidor de desarrollo fue validado correctamente en `localhost:3000` durante esta actualización.
 
 Validación actual:
 
@@ -36,16 +38,19 @@ Validación actual:
 - `npm run validate:change-003`: correcto.
 - `npm run validate:change-004`: correcto.
 - `npm run validate:change-005`: correcto con endpoints AWS simulados.
+- `npm run validate:change-006`: correcto en local y en la URL pública de CloudFront.
 - `npm run test:lambda`: seis pruebas correctas, incluida la identidad byte a byte entre el objeto S3 y el adjunto MIME.
 - `terraform fmt -check -recursive`: correcto.
 - `terraform validate`: correcto.
-- `terraform plan`: 19 recursos a crear, 0 a modificar y 0 a destruir.
+- Plan de CAMBIO-005: 19 recursos a crear, 0 a modificar y 0 a destruir.
 - `terraform apply "cambio005.tfplan"`: correcto; 19 recursos creados, 0 modificados y 0 destruidos.
+- Plan de CAMBIO-006: 0 recursos a crear, 1 distribución CloudFront a modificar en sitio y 0 recursos a destruir.
+- `terraform apply "cambio006.tfplan"`: correcto; 0 recursos agregados, 1 modificado y 0 destruidos.
 - Plan post-apply: correcto, `No changes`.
 - SES verificado: `VerificationStatus: SUCCESS` y `VerifiedForSendingStatus: true`.
 - Dos pruebas reales completas correctas: API `200`, carga S3 `201`, Lambda/SES `200` y dos eventos de éxito en CloudWatch.
 - Frontend publicado en el bucket web e invalidación CloudFront completada.
-- Las cuatro rutas responden con HTTP 200.
+- Las cuatro rutas públicas responden con HTTP 200 en acceso directo y reload, conservan la URL solicitada y no muestran `AccessDenied`.
 - Home contiene exactamente seis secciones y un único `h1`.
 - Validación en Chrome headless a 320, 375, 390, 768, 1024, 1280, 1440 y 1920 px: sin overflow horizontal, imágenes rotas, errores de consola, errores de página ni recursos fallidos.
 - Validación con `prefers-reduced-motion: reduce`: correcta.
@@ -170,6 +175,7 @@ Validación actual:
 - Implementación de CAMBIO-003 en `/empleo`, sustituyendo exclusivamente la presentación nativa del selector de CV por un uploader personalizado accesible y responsive.
 - Implementación de CAMBIO-004 en `/empleo` y `/contacto`, integrando ambos formularios con Web3Forms y sus estados de validación, carga, éxito y error.
 - CAMBIO-005 implementado y desplegado: Empleo utiliza AWS de extremo a extremo y Contacto conserva Web3Forms.
+- CAMBIO-006 implementado, desplegado y verificado: rutas SPA en CloudFront, header persistente/compacto responsive y animación PMI acelerada.
 
 # CAMBIO-001 — Reestructuración de Sobre nosotros
 
@@ -338,7 +344,7 @@ Implementado el 2 de septiembre de 2026.
 - Las animaciones compartidas comprueban la existencia de timeline o proceso antes de crear ScrollTriggers, evitando warnings en páginas que no contienen esos elementos.
 - Los Heroes interiores conservan un slot estructural para 3D, pero utilizan por ahora elementos CSS ligeros e iconografía Lucide.
 - CAMBIO-001 utiliza SVG y profundidad CSS en lugar de WebGL para mantener legibilidad, rendimiento y coherencia con el diseño aprobado.
-- El Header y Footer actuales son una base funcional; su diseño y comportamiento definitivo pertenecen a la Fase 2.
+- El Header es persistente y se compacta de forma responsive durante el scroll; el Footer conserva su implementación existente.
 - No se preparó ni ejecutó un despliegue en Vercel durante esta etapa.
 
 # Archivos importantes modificados
@@ -437,7 +443,7 @@ Implementado el 2 de septiembre de 2026.
 
 # Próximo paso
 
-CAMBIO-005 no tiene trabajo técnico pendiente dentro de su alcance. Como comprobación humana opcional, revisar en Gmail los dos mensajes de prueba identificados como solicitudes de empleo TESI.
+CAMBIO-006 no tiene trabajo técnico pendiente dentro de su alcance.
 
 # CAMBIO-004 — Integración y validación de formularios con Web3Forms
 
@@ -620,3 +626,49 @@ CAMBIO-005 no tiene trabajo técnico pendiente dentro de su alcance. Como compro
 - Prueba negativa real con el antiguo contenido inválido de 48 bytes: autorización `200`, carga S3 `201` y submit `400` con `El CV almacenado no es un PDF válido.`; no se realizó envío SES.
 - Plan Terraform posterior: `No changes`; la infraestructura real coincide con la configuración.
 - Estado final: corrección desplegada y verificada. La inspección visual del nuevo mensaje y la apertura manual del adjunto en Gmail permanecen como comprobación humana opcional; la integridad hasta el mensaje raw aceptado por SES queda comprobada automáticamente en cada envío.
+
+# CAMBIO-006 — Navegación persistente, rutas SPA y animación PMI
+
+Implementado, desplegado y verificado el 3 de septiembre de 2026.
+
+## Frontend y navegación
+
+- El header compartido usa `position: sticky`, permanece visible durante todo el scroll y activa un estado compacto después de 24 px sin salir del flujo normal del documento.
+- El estado compacto reduce moderadamente altura, logo y separación de navegación, con fondo opaco, borde y sombra sutiles. Los tamaños se adaptan por separado para desktop y dispositivos de hasta 860 px.
+- Se añadieron offsets con `scroll-padding-top` y `scroll-margin-top` para proteger el contenido inicial, el enlace de salto y futuros anchors.
+- El overlay móvil conserva bloqueo de scroll, foco, Escape y cierre al seleccionar una página; cubre el viewport completo y su botón mantiene un área táctil mínima de 44 px.
+- El estado activo se calcula con la ubicación de React Router y funciona después de navegación, acceso directo, reload y atrás/adelante.
+- `/sobre-nosotros` es la ruta canónica del menú. `/nosotros` continúa renderizando la misma página como alias compatible, sin recarga completa ni redirección a Home.
+- La secuencia GSAP de “Proyecto exitoso” fue reordenada y acelerada: el núcleo aparece inmediatamente, anillo, estructura y cuatro dimensiones se solapan con stagger corto y la composición termina alrededor de 1.2 segundos. Se conservaron el gráfico, líneas, órbitas y soporte de `prefers-reduced-motion`.
+
+## Terraform, AWS y despliegue
+
+- `infra/main.tf` declara permanentemente dos `custom_error_response` en la distribución CloudFront existente: 403 y 404 entregan `/index.html` con respuesta 200 y `error_caching_min_ttl = 0`.
+- El plan guardado `cambio006.tfplan` mostró `0` altas, `1` modificación en sitio y `0` bajas; únicamente cambió `aws_cloudfront_distribution.tesi_web` (`E1H2B9ZAMMEKWL`).
+- El apply terminó correctamente con `0` recursos agregados, `1` modificado y `0` destruidos. El plan post-apply devolvió `No changes`.
+- AWS confirmó la distribución en estado `Deployed` y las dos respuestas personalizadas con sus códigos, ruta y TTL esperados.
+- El build de producción se sincronizó al bucket web existente `tesi-web-446703866994` sin eliminar objetos remotos. Los assets hash anteriores permanecen inertes y no están referenciados por el nuevo `index.html`.
+- La invalidación CloudFront `I3SMV087VZHT2C9JNFGQV5VSIE` para `/*` terminó en estado `Completed`.
+
+## Validaciones
+
+- `npm run lint`, `npm run build`, `git diff --check`, `terraform fmt -check -recursive` y `terraform validate`: correctos.
+- `npm run validate:site`: 32 combinaciones de cuatro páginas por ocho viewports sin regresiones, overflow, recursos fallidos, errores de página ni errores o warnings de consola.
+- `npm run validate:change-002`: correcto en seis viewports; confirmó que el diseño del modelo PMI se conserva y reduced motion permanece operativo.
+- Se creó `scripts/validate-change-006.mjs`, ejecutable mediante `npm run validate:change-006` y configurable con `TESI_BASE_URL` para validar local o producción.
+- La suite específica pasó tanto en `http://localhost:3000` como en `https://dvvnw97d7nz0s.cloudfront.net`: 16 combinaciones de `/`, `/sobre-nosotros`, `/empleo` y `/contacto` en móvil, tablet, laptop y desktop.
+- Cada ruta se probó mediante acceso directo y reload del navegador; todas devolvieron HTML con HTTP 200 y conservaron exactamente el pathname, sin 403, 404, XML de S3 ni `AccessDenied`.
+- La navegación normal, cierre del menú móvil, ruta activa y botones atrás/adelante fueron correctos. El header permaneció en `top: 0`, redujo su altura, mantuvo offsets suficientes y no generó scroll horizontal.
+- La animación PMI pública terminó en 1216 ms con núcleo y cuatro dimensiones visibles; la prueba local terminó en 1223 ms. La variante reduced motion mostró directamente todo el contenido.
+
+## Archivos importantes modificados
+
+- `infra/main.tf`.
+- `src/App.tsx`.
+- `src/components/layout/Header.tsx`.
+- `src/data/site.ts`.
+- `src/styles/global.css`.
+- `src/animations/useAboutModelAnimations.ts`.
+- `scripts/validate-change-006.mjs`.
+- `package.json`.
+- `PROGRESS.md`.

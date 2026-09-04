@@ -30,6 +30,7 @@ function App() {
     <Routes>
       <Route element={<SiteLayout />}>
         <Route index element={<HomePage />} />
+        <Route path="sobre-nosotros" element={loadPage(<AboutPage />)} />
         <Route path="nosotros" element={loadPage(<AboutPage />)} />
         <Route path="empleo" element={loadPage(<EmploymentPage />)} />
         <Route path="contacto" element={loadPage(<ContactPage />)} />

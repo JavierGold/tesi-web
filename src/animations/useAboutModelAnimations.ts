@@ -55,37 +55,49 @@ export function useAboutModelAnimations(scope: RefObject<HTMLElement | null>) {
             })
 
             pmiTimeline
+              .from(
+                pmiCore,
+                {
+                  autoAlpha: 0,
+                  scale: 0.9,
+                  z: -32,
+                  duration: 0.22,
+                  clearProps: 'all',
+                },
+                0,
+              )
               .fromTo(
                 pmiRing,
                 { attr: { 'stroke-dashoffset': 1 } },
-                { attr: { 'stroke-dashoffset': 0 }, duration: 1.05, ease: 'power1.inOut' },
+                { attr: { 'stroke-dashoffset': 0 }, duration: 0.55, ease: 'power1.inOut' },
+                0,
               )
-              .from(pmiStructure, {
-                autoAlpha: 0,
-                y: 14,
-                z: -18,
-                duration: 0.46,
-                stagger: 0.08,
-                clearProps: 'all',
-              })
-              .from(pmiCore, {
-                autoAlpha: 0,
-                scale: 0.9,
-                z: -32,
-                duration: 0.62,
-                clearProps: 'all',
-              })
+              .from(
+                pmiStructure,
+                {
+                  autoAlpha: 0,
+                  y: 14,
+                  z: -18,
+                  duration: 0.25,
+                  stagger: 0.025,
+                  clearProps: 'all',
+                },
+                0.08,
+              )
 
             pmiDimensions.forEach((dimension, index) => {
+              const start = 0.18 + index * 0.11
+
               pmiTimeline
                 .fromTo(
                   pmiConnectors[index],
                   { attr: { 'stroke-dashoffset': 1 } },
                   {
                     attr: { 'stroke-dashoffset': 0 },
-                    duration: 0.34,
+                    duration: 0.24,
                     ease: 'power1.inOut',
                   },
+                  start,
                 )
                 .from(
                   dimension,
@@ -93,20 +105,24 @@ export function useAboutModelAnimations(scope: RefObject<HTMLElement | null>) {
                     autoAlpha: 0,
                     scale: 0.9,
                     z: -24,
-                    duration: 0.4,
+                    duration: 0.28,
                     clearProps: 'all',
                   },
-                  '-=0.18',
+                  start + 0.08,
                 )
             })
 
-            pmiTimeline.from(pmiCapabilities, {
-              autoAlpha: 0,
-              y: 10,
-              duration: 0.36,
-              stagger: 0.06,
-              clearProps: 'all',
-            })
+            pmiTimeline.from(
+              pmiCapabilities,
+              {
+                autoAlpha: 0,
+                y: 10,
+                duration: 0.25,
+                stagger: 0.035,
+                clearProps: 'all',
+              },
+              0.76,
+            )
           }
 
           const talentSection = scopeElement.querySelector<HTMLElement>('[data-talent-section]')

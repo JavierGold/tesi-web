@@ -43,6 +43,7 @@
 html {
   min-width: 320px;
   scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
 }
 
 body {
@@ -94,6 +95,12 @@ a {
 
 #main-content {
   flex: 1;
+  scroll-margin-top: 5.5rem;
+}
+
+main section[id],
+main [id]:is(h1, h2, h3) {
+  scroll-margin-top: 5.5rem;
 }
 
 .route-loader {
@@ -146,10 +153,21 @@ a {
 }
 
 .site-header {
-  position: relative;
-  z-index: 20;
+  position: sticky;
+  z-index: 50;
+  top: 0;
   border-bottom: 1px solid rgb(8 43 76 / 10%);
-  background: rgb(255 255 255 / 94%);
+  background: rgb(255 255 255 / 96%);
+  transition:
+    border-color 220ms ease,
+    background-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.site-header.is-compact {
+  border-bottom-color: rgb(8 43 76 / 12%);
+  background: rgb(255 255 255 / 98%);
+  box-shadow: 0 8px 24px rgb(8 43 76 / 6%);
 }
 
 .header-inner {
@@ -158,6 +176,14 @@ a {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
+  transition:
+    min-height 220ms ease,
+    gap 220ms ease;
+}
+
+.site-header.is-compact .header-inner {
+  min-height: 4.125rem;
+  gap: var(--space-3);
 }
 
 .brand-link {
@@ -170,10 +196,23 @@ a {
   height: auto;
 }
 
+.brand-logo {
+  transition: width 220ms ease;
+}
+
+.site-header.is-compact .brand-logo {
+  width: 8.625rem;
+}
+
 .primary-navigation {
   display: flex;
   align-items: center;
   gap: clamp(1rem, 3vw, 2.25rem);
+  transition: gap 220ms ease;
+}
+
+.site-header.is-compact .primary-navigation {
+  gap: clamp(0.9rem, 2.3vw, 1.8rem);
 }
 
 .nav-link {
@@ -182,6 +221,13 @@ a {
   font-size: 0.95rem;
   font-weight: 500;
   text-decoration: none;
+  transition:
+    color 180ms ease,
+    font-size 220ms ease;
+}
+
+.site-header.is-compact .nav-link {
+  font-size: 0.925rem;
 }
 
 .nav-link::after {
@@ -342,13 +388,31 @@ a {
   border-top: 1px solid rgb(255 255 255 / 12%);
 }
 
-@media (max-width: 760px) {
+@media (max-width: 860px) {
+  html {
+    scroll-padding-top: 5rem;
+  }
+
+  #main-content,
+  main section[id],
+  main [id]:is(h1, h2, h3) {
+    scroll-margin-top: 5rem;
+  }
+
   .header-inner {
     min-height: 4.5rem;
   }
 
+  .site-header.is-compact .header-inner {
+    min-height: 4rem;
+  }
+
   .brand-logo {
     width: 8.5rem;
+  }
+
+  .site-header.is-compact .brand-logo {
+    width: 7.5rem;
   }
 
   .brand-link,
@@ -385,6 +449,10 @@ a {
       visibility 230ms ease;
   }
 
+  .site-header.is-compact .primary-navigation {
+    gap: 0.4rem;
+  }
+
   .primary-navigation.is-open {
     opacity: 1;
     pointer-events: auto;
@@ -416,6 +484,10 @@ a {
       color 180ms ease,
       opacity 280ms ease,
       transform 280ms ease;
+  }
+
+  .site-header.is-compact .nav-link {
+    font-size: clamp(2rem, 11vw, 4.2rem);
   }
 
   .primary-navigation.is-open .nav-link {

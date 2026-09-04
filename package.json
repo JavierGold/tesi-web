@@ -14,6 +14,7 @@
     "validate:change-003": "node scripts/validate-change-003.mjs",
     "validate:change-004": "node scripts/validate-change-004.mjs",
     "validate:change-005": "node scripts/validate-change-005.mjs",
+    "validate:change-006": "node scripts/validate-change-006.mjs",
     "test:lambda": "node --test infra/lambda/employment/core.test.mjs",
     "verify:employment-live": "node scripts/verify-employment-live.mjs",
     "preview": "vite preview --port 3000 --strictPort"

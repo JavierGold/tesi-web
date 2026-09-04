@@ -3048,26 +3048,6 @@ Solo se permite intervención humana cuando AWS o una decisión de negocio la ha
 
 ---
 
-### 39. Fuera de alcance
-
-NO implementar CAMBIO-006 ni ningún otro cambio.
-
-NO modificar Contacto.
-
-NO eliminar Web3Forms de Contacto.
-
-NO rediseñar la web.
-
-NO modificar textos ajenos a CAMBIO-005.
-
-NO hacer refactors generales.
-
-NO modificar infraestructura no relacionada.
-
-NO ejecutar `terraform apply` sin permiso.
-
----
-
 ### Criterios de aceptación
 
 CAMBIO-005 se considera terminado únicamente cuando:
@@ -3110,3 +3090,447 @@ CAMBIO-005 se considera terminado únicamente cuando:
 - Build/lint/tests correspondientes terminan correctamente.
 - PROGRESS.md queda actualizado.
 - No se implementó ningún otro cambio.
+
+## CAMBIO 006 — Navegación persistente, soporte de recarga en rutas, header dinámico y ajuste de animación
+
+### Objetivo general
+
+Mejorar la navegación general del sitio TESI y corregir el comportamiento de las rutas cuando el sitio está desplegado en AWS CloudFront/S3.
+
+Este cambio debe realizarse de manera integral tanto en el frontend como en la infraestructura Terraform existente.
+
+No quiero realizar configuraciones manuales ni modificaciones posteriores. Codex debe revisar el proyecto actual, implementar los cambios necesarios, validar que funcionen correctamente y actualizar también `PROGRESS.md`.
+
+---
+
+### 1. Corregir recarga directa de páginas en CloudFront
+
+Actualmente la navegación mediante React funciona correctamente, pero si el usuario se encuentra, por ejemplo, en:
+
+- `/empleo`
+- `/contacto`
+- `/sobre-nosotros`
+
+y presiona `reload`, actualiza el navegador o accede directamente a esa URL, CloudFront/S3 responde con un error similar a:
+
+`AccessDenied`
+
+Esto debe quedar completamente corregido.
+
+#### Comportamiento esperado
+
+Si el usuario se encuentra en:
+
+`https://dominio.com/empleo`
+
+y presiona F5 o recarga la página:
+
+- La URL debe continuar siendo `/empleo`.
+- Debe volver a mostrarse la página de Empleo.
+- NO debe redirigirse al Home.
+- NO debe cambiarse la URL a `/`.
+- NO debe aparecer ningún error XML de S3.
+- React Router debe seguir resolviendo la ruta correspondiente.
+
+El mismo comportamiento debe funcionar para todas las rutas actuales y futuras de la SPA.
+
+#### Implementación de infraestructura
+
+Revisar la configuración Terraform actual de AWS.
+
+La distribución existente de CloudFront debe configurarse correctamente para soportar rutas de una Single Page Application.
+
+Cuando S3/CloudFront responda con errores `403` o `404` debido a que una ruta de React no representa un archivo físico, CloudFront debe entregar:
+
+`/index.html`
+
+con código HTTP:
+
+`200`
+
+manteniendo intacta la URL solicitada por el navegador.
+
+Agregar mediante Terraform los `custom_error_response` necesarios para:
+
+- 403 → `/index.html` → respuesta 200.
+- 404 → `/index.html` → respuesta 200.
+
+Utilizar `error_caching_min_ttl = 0` o la configuración adecuada para evitar que estos errores queden almacenados innecesariamente.
+
+NO realizar este cambio únicamente de forma manual desde la consola de AWS.
+
+La configuración debe quedar declarada en Terraform para que sea reproducible.
+
+Revisar además que esto no interfiera con archivos reales como:
+
+- JavaScript
+- CSS
+- imágenes
+- SVG
+- fuentes
+- favicon
+- assets
+
+---
+
+### 2. Header / menú de navegación fijo durante toda la navegación
+
+Actualmente el menú solamente resulta cómodo cuando el usuario se encuentra en la parte superior.
+
+Quiero que el menú permanezca disponible durante todo el scroll para que el usuario pueda cambiar entre:
+
+- Home
+- Sobre nosotros
+- Empleo
+- Contacto
+
+sin tener que regresar manualmente hasta la parte superior.
+
+Implementar el header como navegación persistente mediante `sticky` o la solución técnicamente más apropiada.
+
+Debe permanecer visible mientras el usuario hace scroll.
+
+---
+
+### 3. Header dinámico y compacto al hacer scroll
+
+NO quiero simplemente dejar el header actual fijo ocupando permanentemente toda su altura.
+
+El comportamiento debe ser dinámico.
+
+#### Cuando el usuario está al inicio de la página
+
+Mantener aproximadamente el diseño actual:
+
+- Logo con su tamaño actual o muy similar.
+- Espaciado cómodo.
+- Navegación amplia.
+- Apariencia elegante y limpia.
+
+#### Cuando el usuario comienza a hacer scroll
+
+El header debe transformarse suavemente en una versión más compacta.
+
+Reducir de forma moderada:
+
+- altura del header;
+- padding vertical;
+- tamaño visual del logo;
+- espacios alrededor de los elementos del menú.
+
+Debe seguir siendo perfectamente legible y cómodo de utilizar.
+
+La reducción NO debe ser exagerada.
+
+El objetivo es que el menú permanezca accesible sin quitar demasiado espacio vertical al contenido.
+
+Agregar una transición suave entre ambos estados.
+
+Evitar cambios bruscos o movimientos molestos.
+
+---
+
+### 4. Comportamiento visual del header compacto
+
+Cuando el header se encuentre en modo compacto al hacer scroll:
+
+- mantener fondo sólido o suficientemente opaco;
+- conservar una apariencia profesional;
+- mantener buena separación visual respecto al contenido;
+- puede utilizarse una sombra extremadamente sutil o borde inferior si mejora la separación;
+- mantener la línea/indicador de la página activa;
+- conservar los colores actuales de TESI;
+- no introducir un estilo diferente al diseño existente.
+
+Evitar efectos demasiado llamativos.
+
+NO usar efectos que dificulten la lectura del contenido que pasa debajo.
+
+---
+
+### 5. Evitar que el header tape contenido
+
+La implementación del menú persistente no debe provocar que:
+
+- títulos queden escondidos debajo del header;
+- anchors o navegación interna se posicionen detrás del header;
+- el inicio de las páginas quede parcialmente oculto;
+- exista un salto de layout cuando cambie entre header normal y compacto.
+
+Revisar correctamente alturas, offsets, `scroll-margin`, padding o cualquier ajuste necesario.
+
+El diseño debe mantenerse estable.
+
+---
+
+### 6. Comportamiento responsive del menú
+
+El menú persistente debe funcionar correctamente en TODAS las resoluciones.
+
+Validar como mínimo:
+
+- desktop grande;
+- laptop;
+- tablet;
+- móvil.
+
+En desktop mantener la navegación horizontal actual.
+
+En resoluciones pequeñas utilizar el comportamiento responsive que ya tenga el proyecto o adaptarlo si es necesario.
+
+En móvil:
+
+- el header también debe permanecer accesible;
+- debe ocupar poco espacio vertical;
+- el logo debe conservar buena proporción;
+- el botón del menú debe ser fácil de presionar;
+- el menú desplegable no debe quedar escondido detrás de otros elementos;
+- al seleccionar una página, el menú móvil debe cerrarse correctamente;
+- no debe generarse scroll horizontal.
+
+El header compacto debe adaptarse proporcionalmente dependiendo del dispositivo.
+
+No utilizar simplemente las mismas medidas de desktop en móvil.
+
+---
+
+### 7. Mantener navegación y página activa
+
+El menú debe continuar indicando visualmente cuál página está seleccionada.
+
+Ejemplo:
+
+Si el usuario está en:
+
+`/empleo`
+
+la opción `Empleo` debe conservar su indicador activo.
+
+Esto también debe funcionar:
+
+- después de navegar;
+- después de recargar;
+- al entrar directamente mediante una URL;
+- utilizando atrás/adelante del navegador.
+
+No romper React Router ni sustituir la navegación de React por recargas completas del documento.
+
+---
+
+### 8. Acelerar animación de la sección de Sobre nosotros
+
+En la página `Sobre nosotros` existe una animación/gráfico con un círculo central:
+
+`Proyecto exitoso`
+
+rodeado por los elementos:
+
+- Requerimientos
+- Calidad
+- Tiempo
+- Costo
+
+Actualmente estos círculos tardan demasiado en aparecer.
+
+La composición gráfica actual me gusta y debe conservarse.
+
+NO rediseñar esta sección.
+
+Únicamente modificar la velocidad y timing de aparición.
+
+---
+
+### 9. Nuevo comportamiento de la animación
+
+La animación debe sentirse notablemente más rápida.
+
+Cuando el usuario llegue a esta sección:
+
+1. El elemento central debe aparecer prácticamente de inmediato.
+2. Los círculos exteriores deben comenzar a aparecer casi inmediatamente después.
+3. La secuencia completa debe sentirse fluida pero rápida.
+4. El usuario no debe quedarse esperando varios segundos para ver la composición completa.
+
+Reducir:
+
+- delays;
+- stagger;
+- duración excesiva de entrada;
+- tiempos entre cada círculo.
+
+Como referencia de experiencia:
+
+La composición principal debería estar prácticamente completa aproximadamente entre `0.8 y 1.5 segundos` después de que la animación se active.
+
+No es necesario que todos aparezcan simultáneamente.
+
+Puede conservarse un pequeño stagger para dar sensación de movimiento.
+
+---
+
+### 10. Mantener calidad de la animación
+
+Aunque se acelere:
+
+- conservar movimientos suaves;
+- conservar los efectos orbitales actuales;
+- conservar líneas, círculos y elementos visuales;
+- evitar que los elementos simplemente aparezcan de golpe;
+- mantener el aspecto tecnológico y elegante.
+
+Si actualmente la animación utiliza Framer Motion, CSS animations, Intersection Observer u otra implementación, modificar la existente en lugar de reconstruir innecesariamente el componente.
+
+También respetar `prefers-reduced-motion` si ya existe o incorporarlo si corresponde.
+
+---
+
+### 11. Validaciones de navegación
+
+Probar explícitamente estas rutas en el despliegue final:
+
+`/`
+
+`/sobre-nosotros`
+
+`/empleo`
+
+`/contacto`
+
+Para cada una validar:
+
+1. Navegar desde el menú.
+2. Recargar con F5.
+3. Recargar mediante el botón del navegador.
+4. Abrir directamente la URL.
+5. Utilizar botón atrás.
+6. Utilizar botón adelante.
+7. Hacer scroll y comprobar el header persistente.
+
+Todas deben funcionar sin error `403`, `404` o `AccessDenied`.
+
+---
+
+### 12. Validaciones del header
+
+Comprobar que:
+
+- se muestra normalmente al inicio;
+- se compacta al hacer scroll;
+- la transición es suave;
+- permanece visible;
+- no tapa contenido;
+- conserva la opción activa;
+- funciona al cambiar de página estando ya en scroll;
+- funciona correctamente al regresar a la parte superior;
+- funciona en desktop;
+- funciona en tablet;
+- funciona en móvil;
+- no genera desplazamiento horizontal;
+- no provoca saltos visuales importantes.
+
+---
+
+### 13. Validaciones de la animación
+
+En `Sobre nosotros` comprobar que:
+
+- el gráfico conserva su diseño actual;
+- los círculos aparecen más rápidamente;
+- el usuario no tiene que esperar demasiado;
+- las animaciones siguen siendo suaves;
+- no existe parpadeo;
+- no se rompe el layout;
+- funciona correctamente al entrar por primera vez;
+- se comporta correctamente al volver a la sección.
+
+---
+
+### 14. Terraform y despliegue
+
+Codex debe encargarse de revisar y actualizar los archivos Terraform existentes.
+
+NO crear una segunda infraestructura paralela.
+
+Modificar los recursos existentes de TESI.
+
+Después de realizar los cambios:
+
+1. Formatear Terraform.
+2. Validar Terraform.
+3. Ejecutar `terraform plan`.
+4. Revisar que el plan no vaya a destruir o reemplazar recursos críticos innecesariamente.
+5. Aplicar los cambios mediante `terraform apply`.
+6. Generar el build de producción del frontend.
+7. Desplegar el build actualizado al bucket S3 correspondiente.
+8. Invalidar CloudFront si es necesario para que los cambios se reflejen inmediatamente.
+9. Esperar/verificar que la distribución haya quedado actualizada.
+10. Probar las URLs públicas.
+
+Utilizar las credenciales y configuración AWS/Terraform ya existentes en el proyecto.
+
+No pedirme que modifique manualmente archivos o configuraciones que Codex pueda realizar.
+
+Si AWS requiere autenticación externa que Codex técnicamente no pueda completar, únicamente detenerse en ese punto y decir exactamente qué autorización es necesaria.
+
+---
+
+### 15. No modificar innecesariamente
+
+Este cambio NO debe:
+
+- rediseñar el Home;
+- cambiar textos;
+- modificar colores aprobados;
+- cambiar la tipografía;
+- modificar las páginas actuales;
+- rediseñar el gráfico de Proyecto exitoso;
+- sustituir React Router;
+- introducir dependencias innecesarias;
+- crear otra distribución CloudFront;
+- crear otro bucket S3;
+- recrear infraestructura existente sin necesidad.
+
+Trabajar sobre la implementación actual.
+
+---
+
+### 16. Actualizar documentación
+
+Al terminar el Cambio 006:
+
+Actualizar `PROGRESS.md` indicando como completado:
+
+- soporte correcto de rutas SPA en CloudFront;
+- recarga directa conservando la ruta actual;
+- configuración 403/404 mediante Terraform;
+- header persistente;
+- header compacto durante scroll;
+- comportamiento responsive del header;
+- mejora en velocidad de la animación de Sobre nosotros;
+- build de producción;
+- despliegue AWS;
+- invalidación de CloudFront si fue necesaria;
+- pruebas finales realizadas.
+
+Registrar también cualquier archivo importante modificado.
+
+---
+
+### Criterio de aceptación del Cambio 006
+
+El cambio se considera terminado únicamente cuando:
+
+- puedo estar en `/empleo`, presionar F5 y continuar viendo Empleo;
+- puedo hacer lo mismo en todas las demás rutas;
+- nunca aparece el XML `AccessDenied`;
+- la URL no cambia al Home al recargar;
+- el menú permanece disponible mientras hago scroll;
+- el menú se vuelve más compacto al bajar;
+- el menú no estorba ni tapa contenido;
+- funciona correctamente en móvil, tablet y desktop;
+- el gráfico de `Proyecto exitoso` conserva su diseño pero muestra sus elementos considerablemente más rápido;
+- Terraform contiene permanentemente la configuración de CloudFront;
+- la versión corregida queda desplegada en AWS;
+- `PROGRESS.md` queda actualizado.
+
+No considerar el Cambio 006 terminado solamente porque funcione en localhost. Debe verificarse también utilizando la URL pública de CloudFront.
